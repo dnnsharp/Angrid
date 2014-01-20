@@ -1,0 +1,30 @@
+
+.angrid-search {
+    padding: 30px;
+}
+
+.angrid th i.glyphicon {
+    font-size: 0.8em;
+}
+
+
+.angrid-pager {
+    border-top: 1px solid #ccc;
+}
+
+.angrid-pager {
+    padding: 9px;
+}
+
+.angrid-pager .pagination {
+    margin: 0;
+}
+
+.angrid-ddpagesize {
+    text-align: right;
+}
+
+.angrid-ddpagesize select {
+    width: auto;
+    display: inline;
+}
