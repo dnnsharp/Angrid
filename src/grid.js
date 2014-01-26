@@ -4,6 +4,9 @@ var angrid = angular.module('angrid', ['ngAnimate']);
 
 function ArrayDataSource(arr) {
 
+    // for referencing inside functions
+    var _dataSource = this;
+
     // this is the entire array
     this.raw = arr;
     this._currentSortingByField = null;
@@ -13,19 +16,51 @@ function ArrayDataSource(arr) {
 
     // total number of results in the data source
     this.totalResults = arr.length;
-    
+
     // the current page of data
     this.currentQuery = null;
 
+    // returns a list of values for a given filter (TODO and current query)
+    this.getFilterValues = function (filterName) { //, query) {
+
+        var result = [];
+        $.each(this.raw, function (i, v) {
+            if ($.inArray(v[filterName], result) == -1) result.push(v[filterName]);
+        });
+        return result;
+    };
+
     this.load = function (query, fnDone) {
 
-        if (query.pageCount() > 0 && (query.currentPage < 1 || query.currentPage > query.pageCount()))
-            return;
+        if (isNaN(query.currentPage))
+            query.currentPage = 1;
+
+        if (isNaN(query.currentPageSize) || query.currentPageSize == 0)
+            query.currentPageSize = query.defaultPageSize();
+
+        if (query.pageCount() > 0) {
+            if (query.currentPage < 1)
+                query.currentPage = 1;
+            else if (query.currentPage > query.pageCount())
+                query.currentPage = query.pageCount()
+        }
+
+        //if (query.pageCount() > 0 && (query.currentPage < 1 || query.currentPage > query.pageCount()))
+        //    return;
 
         this.currentQuery = query;
         var results = this.raw.slice(0);
 
-        // if search is applied, filter results first
+        // apply filters first
+        if (query.filters) {
+            $.each(query.filters, function(filterName, filterValue){
+                results = $.grep(results, function (item) {
+                    return item[filterName] == filterValue;
+                });
+            });
+        }
+
+        // apply search
         if (query.search) {
             var re = new RegExp(query.search, "i");
             results = $.grep(results, function (item) {
@@ -55,7 +90,16 @@ function ArrayDataSource(arr) {
         this.data = results.slice((query.currentPage - 1) * query.currentPageSize, query.currentPage * query.currentPageSize);
         fnDone && fnDone();
     };
+
+    this.delete = function (items, fnDone) {
+        $.each(items, function (i, o) {
+            _dataSource.raw.splice(jQuery.inArray(o, _dataSource.raw), 1);
+        });
+
+        fnDone && fnDone();
+    }
 }
+
 
 angrid.directive('angrid', ['$compile', '$timeout', '$parse', '$sce', function ($compile, $timeout, $parse, $sce) {
     return {
@@ -65,7 +109,7 @@ angrid.directive('angrid', ['$compile', '$timeout', '$parse', '$sce', function (
         },
         templateUrl: 'src/grid.html',
         link: function (scope, element, attrs) {
-       
+
             // sanitize data
             if (!scope.settings.pageSizes)
                 scope.settings.pageSizes = [10];
@@ -76,12 +120,25 @@ angrid.directive('angrid', ['$compile', '$timeout', '$parse', '$sce', function (
                 currentPageSize: scope.settings.pageSizes[0],
                 search: '',
                 sort: { 'field': '', 'ascending': true },
+                filters: { },
 
                 pageCount: function () {
                     return Math.floor(scope.source.totalResults / scope.query.currentPageSize)
                         + (scope.source.totalResults % scope.query.currentPageSize == 0 ? 0 : 1);
+                },
+                defaultPageSize: function () {
+                    return scope.settings.pageSizes ? scope.settings.pageSizes[0] : 10
                 }
+
             }, scope.settings.initalQuery);
+
+            // also watch inital data for changes
+            scope.$watch('settings.initalQuery', function () {
+                $.extend(scope.query, scope.settings.initalQuery);
+                // reload data
+                scope.source.load(scope.query, fnDataLoaded);
+            }, true);
+
 
             // this function gets called after data is loaded by the data source
             var fnDataLoaded = function () {
@@ -123,6 +180,49 @@ angrid.directive('angrid', ['$compile', '$timeout', '$parse', '$sce', function (
                 }, 100);
             };
 
+
+            scope.hasFilters = function () {
+                return $.grep(scope.settings.columns, function (col) {
+                    return col.filterable;
+                }).length > 0;
+            };
+
+            scope.filter = function (col, val) {
+                scope.query.filters[col.name] = val;
+                scope.loadPage(1);
+            };
+
+            scope.clearFilters = function () {
+                scope.query.filters = {};
+                scope.loadPage(1);
+            };
+
+
+            // when some item is selected, we save it in an array, so we keep the selection upon navigation
+            scope.selected = [];
+            scope.toggleSelect = function (item) {
+                item.$_selected = !item.$_selected;
+                if (item.$_selected) {
+                    scope.selected.push(item);
+                } else {
+                    scope.selected = $.grep(scope.selected, function (sel) { return sel[scope.settings.specialFields.id] != item[scope.settings.specialFields.id] });
+                }
+                //console.log(scope.selected);
+            };
+
+            scope.clearSelection = function () {
+                for (var i = 0; i < scope.selected.length; i++)
+                    scope.selected[i].$_selected = false;
+                scope.selected = [];
+            };
+
+            scope.deleteSelected = function () {
+                scope.source.delete(scope.selected, function () {
+                    scope.selected = [];
+                    scope.loadPage(1);
+                });
+            };
+
             // if source is array, build an ArrayDataSource around it
             if ($.isArray(scope.source)) {
                 scope.source = new ArrayDataSource(scope.source);
@@ -131,4 +231,5 @@ angrid.directive('angrid', ['$compile', '$timeout', '$parse', '$sce', function (
 
         }
     };
-}])
+}]);
+

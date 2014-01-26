@@ -2,43 +2,106 @@
 
     <div data-ng-if="settings.search" class="form-horizontal angrid-search">
         <!--<label class="col-md-2 control-label">Search</label>-->
-        <div class="col-md-offset-2 col-md-8" >
+        <div class="col-md-offset-2 col-md-8">
             <input type="text" class="form-control input-lg" data-ng-model="searchTerms" data-ng-keyup="delayedSearch(searchTerms)" placeholder="Search Something..." />
         </div>
         <div class="clearfix"></div>
     </div>
 
-    <table class="table table-hover ">
+    <table class="table table-striped">
         <thead>
             <tr class="active">
+                
                 <th data-ng-repeat="c in settings.columns">
-                    <a href="" data-ng-if="c.sortable" title="Sort by {{c.title}}" data-ng-click="sortBy(c.name);">{{c.title}}</a>
-                    <i class="glyphicon glyphicon-chevron-down" data-ng-if="c.sortable && query.sort.field == c.name && query.sort.ascending"></i>
-                    <i class="glyphicon glyphicon-chevron-up" data-ng-if="c.sortable && query.sort.field == c.name && !query.sort.ascending"></i>
 
-                    <span data-ng-if="!c.sortable">{{c.title}}</span>
+                    <span data-ng-show="!c.filterable || !$_editFilters">
+                        <a href="" data-ng-if="c.sortable" title="Sort by {{c.title}}" data-ng-click="sortBy(c.name);">{{c.title}}</a>
+                        <i class="glyphicon glyphicon-chevron-down" data-ng-if="c.sortable && query.sort.field == c.name && query.sort.ascending"></i>
+                        <i class="glyphicon glyphicon-chevron-up" data-ng-if="c.sortable && query.sort.field == c.name && !query.sort.ascending"></i>
+
+                        <span data-ng-if="!c.sortable">{{c.title}}</span>
+                    </span>
+
+                    <div class="btn-group angrid-filter" data-ng-if="c.filterable" data-ng-show="$_editFilters">
+                        <button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown">
+                            <span class="filter-name">
+                                {{c.title}}: {{query.filters[c.name] ? query.filters[c.name] : '--'}}
+                            </span>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li data-ng-repeat="v in source.getFilterValues(c.name)">
+                                <a href="" data-ng-click="filter(c, v)">{{v}}</a>
+                            </li>
+                        </ul>
+                    </div>
                 </th>
+
+                <th width="1">
+                    <button type="button" class="btn btn-default" data-ng-click="$_editFilters = !$_editFilters" title="Filter data" data-ng-show="!$_editFilters && hasFilters()">
+                        <span class="glyphicon glyphicon-filter"></span>
+                    </button>
+
+                    <button type="button" class="btn btn-default" data-ng-click="$_editFilters = !$_editFilters; clearFilters();" title="Clear Filters" data-ng-show="$_editFilters && hasFilters()">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </th>
+
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="row in source.data" class="">
-                <td data-ng-repeat="c in settings.columns">
+            <tr data-ng-repeat="row in source.data" class="angrid-row" data-ng-class="{'selected':row.$_selected}">
+
+                <td data-ng-repeat="c in settings.columns" data-ng-click="toggleSelect(row)">
                     {{row[c.name]}}
+                </td>
+                <td>
+                    <a href="{{row[settings.specialFields.url]}}" class="btn btn-default opacity75" data-ng-if="row[settings.specialFields.url]">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
                 </td>
             </tr>
         </tbody>
     </table>
 
+    <p class="angrid-nodata text-muted" data-ng-if="!source.data.length">No data</p>
+
     <div class="row well angrid-pager">
-        <div class="col-md-10">
-            <ul class="pagination pagination-sm" data-ng-if="query.pageCount() > 1">
+        <div class="col-xs-10">
+            <!--classic pagination is 1.2.3.4.5 etc-->
+            <ul class="pagination pagination-sm" data-ng-if="settings.pagination == 'classic' && query.pageCount() > 1">
                 <li><a href="" data-ng-click="loadPage(query.currentPage - 1)">&laquo;</a></li>
                 <li data-ng-repeat="i in pages" data-ng-class="{'active': i == query.currentPage}"><a href="" data-ng-click="loadPage(i)">{{i}}</a></li>
                 <li><a href="" data-ng-click="loadPage(query.currentPage + 1)">&raquo;</a></li>
             </ul>
+
+            <!--simple navigation is prev/next, more suitable for touch-->
+            <ul class="pager" data-ng-if="settings.pagination == 'simple' && query.pageCount() > 1">
+                <li><button type="button" class="btn btn-default" data-ng-click="loadPage(query.currentPage - 1)" data-ng-disabled="query.currentPage <= 1">&larr;  Previous</button></li>
+                <li class="pager-status">{{query.currentPage}} / {{query.pageCount()}}</li>
+                <li><button data-ng-click="loadPage(query.currentPage + 1)" class="btn btn-default" data-ng-disabled="query.currentPage >= query.pageCount()">Next &rarr;</button></li>
+            </ul>
+
         </div>
-        <div class="col-md-2 angrid-ddpagesize" data-ng-if="settings.pageSizes.length > 1">
+        <div class="col-xs-2 angrid-ddpagesize" data-ng-if="settings.pageSizes.length > 1">
             <select class="form-control input-sm" data-ng-options="s for s in settings.pageSizes" data-ng-model="query.currentPageSize" data-ng-change="query.currentPage = 1"></select>
         </div>
     </div>
+
+    <div class="" data-ng-if="selected.length > 0">
+        <div data-ng-show="!confirmDelete">
+            <a href="" class="btn btn-danger" data-ng-click="confirmDelete = true;">
+                <i class="glyphicon glyphicon-trash"></i> Remove
+            </a>
+            <span class="label label-info"> {{selected.length}}</span> items selected
+            (<a href="" data-ng-click="clearSelection()">clear</a>)
+        </div>
+
+        <div class="alert alert-warning" data-ng-show="confirmDelete">
+            Are you sure you wish to delete these {{selected.length}} items?
+            <a href="" class="btn btn-danger btn-xs" data-ng-click="deleteSelected()">Yes, pretty sure</a>
+            <a href="" class="btn btn-default btn-xs" data-ng-click="confirmDelete = false">No, I'm having second thougts</a>
+        </div>
+    </div>
+
 </div>

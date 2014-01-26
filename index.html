@@ -30,7 +30,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Angular Grid.js</a>
+                <a class="navbar-brand" href="#">Angrid</a>
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
@@ -47,48 +47,111 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="bs-sidebar hidden-print affix" role="complementary">
-                    <ul class="nav bs-sidenav">
+                    <ul class="nav bs-sidenav hidden-xs hidden-sm">
 
                         <li>
-                            <a href="#simple-grid">Overview</a>
-                            <ul class="nav">
+                            <a href="#overview">Overview</a>
+                            <!--<ul class="nav">
                                 <li><a href="#js-individual-compiled">Individual or compiled</a></li>
                                 <li><a href="#js-data-attrs">Data attributes</a></li>
-                            </ul>
+                            </ul>-->
                         </li>
-                        <!--     <li><a href="#transitions">Transitions</a></li>
-                            <li>
-                                <a href="#modals">Modal</a>
-                                <ul class="nav">
-                                    <li><a href="#modals-examples">Examples</a></li>
-                                    <li><a href="#modals-usage">Usage</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#dropdowns">Dropdown</a>
-                                <ul class="nav">
-                                    <li><a href="#dropdowns-examples">Examples</a></li>
-                                    <li><a href="#dropdowns-usage">Usage</a></li>
-                                </ul>
-                            </li> -->
+                        <li><a href="#sample-grid">Sample Grid</a></li>
+                        <!--        <li>
+                              <a href="#modals">Modal</a>
+                              <ul class="nav">
+                                  <li><a href="#modals-examples">Examples</a></li>
+                                  <li><a href="#modals-usage">Usage</a></li>
+                              </ul>
+                          </li>
+                          <li>
+                              <a href="#dropdowns">Dropdown</a>
+                              <ul class="nav">
+                                  <li><a href="#dropdowns-examples">Examples</a></li>
+                                  <li><a href="#dropdowns-usage">Usage</a></li>
+                              </ul>
+                          </li> -->
                     </ul>
                 </div>
             </div>
 
             <div class="col-md-9" data-ng-controller="AppCtrl">
-                <div class="scroll-anchor" id="simple-grid"></div>
+
+                <div class="scroll-anchor" id="overview"></div>
                 <section>
                     <div class="page-header">
-                        <h1>Simple Grid</h1>
+                        <h1>Overview</h1>
                     </div>
-                    <!--<p class="">Use this document as a way to quickly start any new project.<br /> All you get is this text and a mostly barebones HTML docuoment.</p>-->
+                    <p class="">
+                        An javascript Grid component built with Angular JS and Bootstrap 3.
+                    </p>
+                </section>
+
+
+                <div class="scroll-anchor" id="sample-grid"></div>
+                <section>
+                    <div class="page-header">
+                        <h1>Sample Grid</h1>
+                    </div>
+                    <p class="lead">The grid comes with various configurable settings. The sample grid below the settings will update real time.</p>
+
+                    <div class="form-horizontal">
+
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">Pagination</label>
+                            <div class="col-xs-4">
+                                <select class="form-control" data-ng-model="settings.pagination">
+                                    <option>classic</option>
+                                    <option>simple</option>
+                                </select>
+                            </div>
+                            <label class="col-xs-2 control-label">Initial Page</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control" data-ng-model="settings.initalQuery.currentPage" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">Page sizes</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control" data-ng-list="," data-ng-model="settings.pageSizes" />
+                            </div>
+                            <label class="col-xs-2 control-label">Initial Page Size</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control" data-ng-model="settings.initalQuery.currentPageSize" />
+                            </div>
+                            
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">Sorting</label>
+                            <div class="col-xs-10">
+                                <label class="checkbox-inline"><input type="checkbox" data-ng-model="settings.columns[0].sortable" /> Sort by Id</label>
+                                <label class="checkbox-inline"><input type="checkbox" data-ng-model="settings.columns[1].sortable" /> Sort by First Name</label>
+                                <label class="checkbox-inline"><input type="checkbox" data-ng-model="settings.columns[2].sortable" /> Sort by Last Name</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">Filters</label>
+                            <div class="col-xs-10">
+                                <label class="checkbox-inline"><input type="checkbox" data-ng-model="settings.search" /> Enable Search</label>
+                                <label class="checkbox-inline"><input type="checkbox" data-ng-model="settings.columns[1].filterable" /> Filter by First Name</label>
+                                <label class="checkbox-inline"><input type="checkbox" data-ng-model="settings.columns[2].filterable" /> Filter by Last Name</label>
+                            </div>
+                        </div>
+
+
+                    </div>
 
                     <div data-angrid=""
                          data-settings="settings"
-                         data-source="data">
+                         data-source="data" style="border-top: 3px dashed #ccc; margin: 40px 0; padding: 20px 0;">
                     </div>
 
                 </section>
+
+
             </div>
         </div>
         <br />
@@ -126,7 +189,6 @@
         <br />
         <br />
     </div><!-- /.container -->
-
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://code.jquery.com/jquery.js"></script>
     <script src="libs/angular/angular.min.js"></script>
