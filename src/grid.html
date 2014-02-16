@@ -11,7 +11,7 @@
     <table class="table table-striped">
         <thead>
             <tr class="active">
-                
+
                 <th data-ng-repeat="c in settings.columns">
 
                     <span data-ng-show="!c.filterable || !$_editFilters">
@@ -23,14 +23,14 @@
                     </span>
 
                     <div class="btn-group angrid-filter" data-ng-if="c.filterable" data-ng-show="$_editFilters">
-                        <button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown">
+                        <button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="{{settings.dropdownClass}}">
                             <span class="filter-name">
                                 {{c.title}}: {{query.filters[c.name] ? query.filters[c.name] : '--'}}
                             </span>
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
-                            <li data-ng-repeat="v in source.getFilterValues(c.name)">
+                            <li data-ng-repeat="v in source.filters[c.name]">
                                 <a href="" data-ng-click="filter(c, v)">{{v}}</a>
                             </li>
                         </ul>
@@ -38,11 +38,11 @@
                 </th>
 
                 <th width="1">
-                    <button type="button" class="btn btn-default" data-ng-click="$_editFilters = !$_editFilters" title="Filter data" data-ng-show="!$_editFilters && hasFilters()">
+                    <button type="button" class="btn btn-default" data-ng-click="toggleFilters()" title="Filter data" data-ng-show="!$_editFilters && hasFilters()">
                         <span class="glyphicon glyphicon-filter"></span>
                     </button>
 
-                    <button type="button" class="btn btn-default" data-ng-click="$_editFilters = !$_editFilters; clearFilters();" title="Clear Filters" data-ng-show="$_editFilters && hasFilters()">
+                    <button type="button" class="btn btn-default" data-ng-click="toggleFilters(); clearFilters();" title="Clear Filters" data-ng-show="$_editFilters && hasFilters()">
                         <span class="glyphicon glyphicon-remove"></span>
                     </button>
                 </th>
@@ -67,7 +67,12 @@
     <p class="angrid-nodata text-muted" data-ng-if="!source.data.length">No data</p>
 
     <div class="row well angrid-pager">
+        
         <div class="col-xs-10">
+
+            <div class="angrid-loading" data-ng-style="{ 'visibility': loading ? 'visible' : 'hidden' }">
+            </div>
+
             <!--classic pagination is 1.2.3.4.5 etc-->
             <ul class="pagination pagination-sm" data-ng-if="settings.pagination == 'classic' && query.pageCount() > 1">
                 <li><a href="" data-ng-click="loadPage(query.currentPage - 1)">&laquo;</a></li>
@@ -76,10 +81,10 @@
             </ul>
 
             <!--simple navigation is prev/next, more suitable for touch-->
-            <ul class="pager" data-ng-if="settings.pagination == 'simple' && query.pageCount() > 1">
+            <ul class="pager" data-ng-if="settings.pagination == 'touch' && query.pageCount() > 1">
                 <li><button type="button" class="btn btn-default" data-ng-click="loadPage(query.currentPage - 1)" data-ng-disabled="query.currentPage <= 1">&larr;  Previous</button></li>
                 <li class="pager-status">{{query.currentPage}} / {{query.pageCount()}}</li>
-                <li><button data-ng-click="loadPage(query.currentPage + 1)" class="btn btn-default" data-ng-disabled="query.currentPage >= query.pageCount()">Next &rarr;</button></li>
+                <li><button type="button" class="btn btn-default" data-ng-click="loadPage(query.currentPage + 1)" data-ng-disabled="query.currentPage >= query.pageCount()">Next &rarr;</button></li>
             </ul>
 
         </div>

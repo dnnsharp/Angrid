@@ -1,27 +1,27 @@
 
 
-.angrid .table>thead>tr>th {
+div.angrid .table>thead>tr>th {
     border-bottom: 2px solid #999;
 }
 
-.angrid th i.glyphicon {
+div.angrid th i.glyphicon {
     font-size: 0.8em;
 }
 
-.angrid-nodata {
+div.angrid .angrid-nodata {
     text-align: center;
     padding: 10px 0 20px 0;
 }
 
-.angrid td{
+div.angrid td{
     cursor: pointer;
 }
 
-.angrid tr.selected td {
+div.angrid tr.selected td {
     background-color: #fcf8e3 !important;
 }
 
-.angrid-row td, .angrid-row:hover td {
+div.angrid .angrid-row td, div.angrid .angrid-row:hover td {
     -webkit-transition: all .2s ease-out;
     -moz-transition: all .2s ease-out;
     -o-transition: all .2s ease-out;
@@ -39,34 +39,43 @@
 
 /* PAGER */
 
-.angrid-pager {
-    border-top: 1px solid #ccc;
-}
 
-.angrid-pager {
+
+div.angrid .angrid-pager {
+    border-top: 1px solid #ccc;
     padding: 9px;
 }
 
-    .angrid-pager .pagination {
+    div.angrid .angrid-pager .pagination {
         margin: 0;
     }
 
 
-    .angrid-pager .pager {
+    div.angrid .angrid-pager .pager {
         float: left;
         margin: 0;
     }
 
-    .angrid-pager .pager-status {
+    div.angrid .angrid-pager .pager-status {
         padding: 0 10px;
     }
 
+    div.angrid .angrid-pager .angrid-loading {
+        background-image: url(loading.gif);
+        height: 32px;
+        width: 32px;
+        margin-right: 10px;
+        float: left;
+        background-repeat: no-repeat;
+    }
 
-.angrid-ddpagesize {
+
+
+div.angrid .angrid-ddpagesize {
     text-align: right;
 }
 
-    .angrid-ddpagesize select {
+    div.angrid .angrid-ddpagesize select {
         width: auto;
         display: inline;
     }
@@ -76,27 +85,27 @@
 /* FILTERS */
 
 
-.angrid-search {
+div.angrid .angrid-search {
     padding: 0 0 20px 0;
 }
 
-.angrid-filter {
+div.angrid .angrid-filter {
     width: 100%;
 }
 
-    .angrid-filter .filter-name {
+    div.angrid .angrid-filter .filter-name {
         float: left;
         display: block;
         margin: 0 8px;
     }
 
-    .angrid-filter .caret {
+    div.angrid .angrid-filter .caret {
         float: right;
         display: block;
         margin: 8px;
     }
 
-    .angrid-filter .dropdown-menu {
+    div.angrid .angrid-filter .dropdown-menu {
         width: 100%;
         max-height: 240px;
         overflow: auto;

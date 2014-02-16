@@ -12,7 +12,7 @@ function AppCtrl($scope, $http, $timeout) {
             "currentPageSize": 5,
             "currentPage": 2
         },
-        "pagination": "simple",
+        "pagination": "touch",
         "columns": [
             {
                 "name": "Id",
@@ -44,18 +44,40 @@ function AppCtrl($scope, $http, $timeout) {
             
     };
 
+    // setup array data source
     var firstNames = ['John', 'Mike', 'Rich', 'Bill', 'Diana', 'Mark', 'Andrey', 'Benjamin', 'Claude', 'Kevin', 'Eric', 'Ginger', 'Olivia', 'Josh', 'David', 'Joyce', 'Celine'];
     var lastNames = ['Burke', 'Lee', 'Smith', 'Doe', 'Glen', 'Jackson', 'Morgan', 'Fleetwood', 'Clapton', 'Rice', 'Slaugher', 'Spacey', 'Backon', 'Wright', 'Siam', 'Emerson'];
 
-    $scope.data = [];
+    $scope.arrDataSource = [];
     for (var i = 0; i < 63; i++){
-        $scope.data.push({ 
+        $scope.arrDataSource.push({
             "Id": i, 
             "FirstName": firstNames[Math.floor((Math.random() * firstNames.length))],
             "LastName": lastNames[Math.floor((Math.random() * lastNames.length))],
             'Url': 'http://example.com'
         });
     }
+    
+    // setup web service data source
+    //$scope.webServiceDataSource = new WebServiceDataSource('http://localhost:30720/DesktopModules/DnnSharp/ActionGrid/Api.ashx?TabID=2173&alias=localhost%3a30720&mid=3788', {
+    //    transformResults: function (data) {
+    //        var arr = [];
+    //        for (var i = 0; i < data.Results.length; i++) {
+    //            var row = {};
+    //            for (var j = 0; j < data.Results[i].Fields.length; j++) {
+    //                var f = data.Results[i].Fields[j];
+    //                row[f.Name] = f.Value;
+    //            }
+    //            arr.push(row);
+    //        }
+    //        return arr;
+    //    },
+    //    totalResults: function (data) {
+    //        return data.TotalResults
+    //    }
+    //});
+
+    $scope.currentDataSource = $scope.arrDataSource;
 }
 
 // for minification purposes
