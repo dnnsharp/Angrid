@@ -1,0 +1,44 @@
+!!! 5
+%html(xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" data-ng-app="demoApp")
+  %head
+    %meta(http-equiv="Content-Type" content="text/html; charset=utf-8")
+    %meta(name="viewport" content="width=device-width,initial-scale=1")
+    %link(rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css" type="text/css")
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    %link(rel="stylesheet" href="demo.less" type="text/less")
+    - // %link(rel="stylesheet" href="demo.css" type="text/css")
+    %title Angrid Demo Form
+  %body
+    .container-fluid(data-ng-controller="FormCtrl")
+      .row
+        .col-xs-12
+          .form-horizontal(role="form" data-ng-hide="dataUpdated")
+            .form-group
+              %label.col-xs-2.control-label First Name
+              .col-xs-10
+                %input.form-control(type="text" data-ng-model="data.firstName")
+            .form-group
+              %label.col-xs-2.control-label Last Name
+              .col-xs-10
+                %input.form-control(type="text" data-ng-model="data.lastName")
+            .form-group
+              %label.col-xs-2.control-label Email
+              .col-xs-10
+                %input.form-control(type="text" data-ng-model="data.email")
+            .form-group
+              .col-xs-offset-2.col-xs-2
+                %button.btn.btn-primary(data-ng-click="updateData()") Save
+          #message(data-ng-show="dataUpdated") {{message}}
+
+    %script(src="../lib/jquery.min.js")
+    %script(src="../lib/angular/angular.js")
+    %script(src="../lib/bootstrap/js/bootstrap.min.js")
+    %script(src="../lib/less.min.js")
+    %script(src="../src/grid.js")
+    %script(src="angrid_app.js")
+    %script(src="demo.js")

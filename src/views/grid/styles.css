@@ -1,0 +1,66 @@
+
+div.angrid .table {
+    margin-bottom: 4px;
+}
+
+div.angrid .angrid-row td.alert-warning {
+    text-align: center; 
+    background-color: #fcf8e3 !important;
+}
+
+div.angrid .angrid-row td.alert-danger {
+    text-align: center; 
+    background-color: #f2dede !important;
+    color: #a94442;
+}
+
+div.angrid .table > thead > tr > th {
+    border-bottom: 2px solid #999;
+}
+
+div.angrid th i.glyphicon {
+    font-size: 0.8em;
+}
+
+div.angrid .angrid-nodata {
+    text-align: center;
+    padding: 10px 0 20px 0;
+}
+
+div.angrid .angrid-error {
+    text-align: center;
+    padding: 10px 0 20px 0;
+    color: #cc4444;
+}
+
+div.angrid td {
+    cursor: pointer;
+}
+
+div.angrid tr.selected td {
+    background-color: #F3DCBF !important;
+}
+
+div.angrid .angrid-row td, div.angrid .angrid-row:hover td {
+    -webkit-transition: all .2s ease-out;
+    -moz-transition: all .2s ease-out;
+    -o-transition: all .2s ease-out;
+    transition: all .2s ease-out;
+}
+
+div.angrid .angrid-item-buttons {
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+    /*background-color: #f9f9f9;*/
+    text-align: right;
+    white-space:nowrap;
+}
+
+div.angrid .angrid-item-buttons a {
+    margin: 1px;
+}
+
+
+div.angrid-error table, div.angrid-error .angrid-search {
+    display: none;
+}

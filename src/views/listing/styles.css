@@ -1,0 +1,51 @@
+
+div.angrid .table {
+    margin-bottom: 4px;
+}
+
+div.angrid .angrid-row td.alert-warning {
+    text-align: center; 
+    background-color: #fcf8e3 !important;
+}
+
+div.angrid .table > thead > tr > th {
+    border-bottom: 2px solid #999;
+}
+
+div.angrid th i.glyphicon {
+    font-size: 0.8em;
+}
+
+div.angrid .angrid-nodata {
+    text-align: center;
+    padding: 10px 0 20px 0;
+}
+
+
+div.angrid .angrid-item-buttons {
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+    /*background-color: #f9f9f9;*/
+    text-align: right;
+}
+
+div.angrid .angrid-item-buttons a {
+    margin: 1px;
+}
+
+
+div.angrid-error table, div.angrid-error .angrid-search {
+    display: none;
+}
+
+div.angrid .angrid-item .panel-body{
+	cursor: pointer;
+}
+
+div.angrid .angrid-item .panel-body label{
+	cursor: pointer;
+}
+
+div.angrid .angrid-item.selected .panel-body {
+    background-color: #F3DCBF !important;
+}

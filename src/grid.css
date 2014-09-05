@@ -1,32 +1,15 @@
 
 
-div.angrid .table>thead>tr>th {
-    border-bottom: 2px solid #999;
-}
+/* Buttons */
 
-div.angrid th i.glyphicon {
-    font-size: 0.8em;
-}
-
-div.angrid .angrid-nodata {
+div.angrid .angrid-buttons {
     text-align: center;
-    padding: 10px 0 20px 0;
 }
 
-div.angrid td{
-    cursor: pointer;
+div.angrid .angrid-buttons button {
+    margin: 6px 2px;
 }
 
-div.angrid tr.selected td {
-    background-color: #fcf8e3 !important;
-}
-
-div.angrid .angrid-row td, div.angrid .angrid-row:hover td {
-    -webkit-transition: all .2s ease-out;
-    -moz-transition: all .2s ease-out;
-    -o-transition: all .2s ease-out;
-    transition: all .2s ease-out;
-}
 
 
 /* GENERAL */
@@ -44,31 +27,64 @@ div.angrid .angrid-row td, div.angrid .angrid-row:hover td {
 div.angrid .angrid-pager {
     border-top: 1px solid #ccc;
     padding: 9px;
+    margin-bottom: 0px;
 }
 
     div.angrid .angrid-pager .pagination {
         margin: 0;
+        position: inherit;
+        z-index: auto;
     }
 
+/* fix style collisions with some components over pagination (DNN) */
+.bstrap30 div.angrid .pagination > li > a, .bstrap30 div.angrid .pagination > li > span {
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    line-height: 1.428571429;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin-left: -1px;
+    background-image: none;
+    height: auto;
+    width: auto;
+}
 
-    div.angrid .angrid-pager .pager {
-        float: left;
-        margin: 0;
-    }
+.bstrap30 div.angrid .pagination > .active > a {
+    background-color: #428bca;
+}
 
-    div.angrid .angrid-pager .pager-status {
-        padding: 0 10px;
-    }
+.bstrap30 div.angrid .pagination li {
+    float: none;
+}
 
-    div.angrid .angrid-pager .angrid-loading {
-        background-image: url(loading.gif);
-        height: 32px;
-        width: 32px;
-        margin-right: 10px;
-        float: left;
-        background-repeat: no-repeat;
-    }
+div.angrid .angrid-pager .pager {
+    float: left;
+    margin: 0;
+}
 
+div.angrid .angrid-pager .pager-status {
+    padding: 0 10px;
+}
+
+div.angrid .angrid-pager .angrid-loading {
+    background-image: url(loading.gif);
+    height: 32px;
+    width: 32px;
+    margin-right: 10px;
+    float: left;
+    background-repeat: no-repeat;
+}
+
+div.angrid .angrid-loading {
+    background-image: url(loading.gif);
+    height: 36px;
+    width: 36px;
+    background-repeat: no-repeat;
+    float: right;
+    margin: 0 6px;
+}
 
 
 div.angrid .angrid-ddpagesize {
@@ -145,4 +161,57 @@ div.angrid .angrid-filter {
     -moz-opacity: 1; /* Netscape */
     -khtml-opacity: 1; /* Safari 1.x */
     opacity: 1; /* Good browsers */
+}
+
+/* on DNN this doesn't get under our .bstrap3 class */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1040;
+    background-color: #000;
+}
+
+/* some problems in DNN edit mode */
+/* This fixes relative DNN Divs getting on top of our popup */
+.modal-open .DnnModule, .modal-open #DNN6, .modal-open #Content {
+    position: static !important;
+}
+
+.modal-backdrop {
+    z-index: 1030 !important;
+}
+
+.dnnsf-dnn-editmode .modal-backdrop {
+    display: none;
+}
+
+/* And this is to fix incompatibilities with bootstrap 2 */
+div.angrid-popup.modal {
+    width: auto;
+    background: transparent;
+    margin: 0;
+    top: 0!important;
+    overflow-y: scroll;
+}
+
+.angrid-popup .modal-body {
+    max-height: none;
+}
+
+
+@media (min-width:992px) {
+    .angrid-popup .modal-dialog.modal-lg {
+        width: 900px;
+    }
+}
+
+
+/*animations for popup*/
+.modal iframe {
+    -webkit-transition: all .3s ease;
+    -moz-transition: all .3s ease;
+    transition: all .3s ease;
 }
