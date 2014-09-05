@@ -1,0 +1,76 @@
+@import 'variables.less';
+
+body{
+    background-color: #eaeaea;
+}
+
+.container-fluid{
+	//max-width: @container-large-desktop;
+}
+
+.collapsed .panel-body{
+    display: none;
+}
+
+label[for]{
+    cursor: pointer;
+}
+
+.white-space{
+    height: 100px;
+}
+
+a{
+    cursor: pointer;
+}
+
+.settingsArea{
+    padding-top: @navbar-height + 15px;
+}
+
+.angridArea{
+    padding-top: 15px;
+}
+
+.angridArea{
+    margin-top: 15px;
+}
+
+#angridAreaTabs{
+    margin-bottom: 15px;
+}
+
+@media(min-width: @screen-md){
+    .settingsArea{
+        height: 100vh;
+        overflow: auto;
+    }
+    .angridArea{
+        padding-top: @navbar-height + 15px;
+    }
+}
+
+.bs-glyphicons-list{
+    list-style: none outside none;
+    li{
+        display: block;
+        width: 103px;
+        height: 113px;
+        padding: 10px;
+        float: left;
+        text-align: center;
+        cursor: pointer;
+        .glyphicon{
+            font-size: 24px;
+        }
+        .glyphicon-class{
+            display: block;
+            word-wrap: break-word;
+            font-size: 12px;
+        }
+        &:hover{
+            background-color: #563e7c;
+            color: white;
+        }
+    }
+}

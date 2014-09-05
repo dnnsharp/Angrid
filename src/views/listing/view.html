@@ -1,0 +1,60 @@
+
+<div data-ng-repeat="item in source.data"
+     class="angrid-item col-xs-{{12/settings.viewSettings.entriesPerRowMobile}} col-sm-{{12/settings.viewSettings.entriesPerRowTablet}} col-md-{{12/settings.viewSettings.entriesPerRowDesktop}} col-lg-{{12/settings.viewSettings.entriesPerRowLarge}}"
+     data-ng-class="{'selected':item.$_selected}">
+
+    <div class=" panel panel-default">
+
+        <div class="panel-heading">
+            {{item[settings.columns[0].name]}}
+        </div>
+
+        <div class=" panel-body">
+            <div data-ng-repeat="c in settings.columns" data-ng-click="toggleSelect(item)" data-ng-if="!$first && !item.$_confirmAction"
+                 data-ng-class="{ 'hidden-xs': !c.showOn.mobile, 'hidden-sm': !c.showOn.tablet, 'hidden-md': !c.showOn.desktop, 'hidden-lg': !c.showOn.large }">
+                
+                <label data-ng-if="c.displayLabel">{{c.title}}:</label> 
+                
+                <span data-ng-bind-html="$sce.trustAsHtml(item[c.name])" data-ng-if="c.allowHtml"></span>
+                <span data-ng-if="!c.allowHtml">{{item[c.name]}}</span>
+            </div>
+			<div data-ng-if="item.$_confirmAction" class="alert alert-warning">
+                {{item.$_confirmAction.confirmationMessage}}
+                <a href="" class="btn btn-danger btn-xs" data-ng-click="onItemButton(item, item.$_confirmAction, true); item.$_confirmAction = false; ">{{item.$_confirmAction.confirmationOk}}</a>
+                <a href="" class="btn btn-default btn-xs" data-ng-click="item.$_confirmAction = false">{{item.$_confirmAction.confirmationCancel}}</a>
+			</div>
+        </div>
+
+        <div class="panel-footer angrid-item-buttons" data-ng-click="toggleSelect(item)" data-ng-if="!item.$_confirmAction">
+
+            <span class="angrid-loading" data-ng-show="item.$_executing"></span>
+
+            <!--display item buttons-->
+            <div data-ng-if="!item.$_err">
+                <a href="" class="btn btn-{{btn.cssClass}} opacity75" data-ng-repeat="btn in settings.itemButtons"
+                   data-ng-click="onItemButton(item, btn)"
+                   data-ng-hide="item.$_executing"
+                   data-nobubble=""
+                   title="{{btn.help}}">
+                    <span class="glyphicon {{btn.iconClass}}" data-ng-if="btn.iconClass"></span>
+                    {{btn.title}}
+                </a>
+            </div>
+
+            <p data-ng-if="item.$_err" class="text-danger" style="margin-top: 6px;">
+                {{item.$_err}}
+            </p>
+            <div class="clearfix"></div>
+
+        </div>
+    </div>
+</div>
+
+<div class="clearfix"></div>
+
+
+<!--<td data-ng-if="row.$_confirmAction" colspan="{{settings.columns.length + 1}}" class="alert alert-warning">
+    {{row.$_confirmAction.confirmationMessage}}
+    <a href="" class="btn btn-danger btn-xs" data-ng-click="onItemButton(row, row.$_confirmAction, true); row.$_confirmAction = false; ">{{row.$_confirmAction.confirmationOk}}</a>
+    <a href="" class="btn btn-default btn-xs" data-ng-click="row.$_confirmAction = false">{{row.$_confirmAction.confirmationCancel}}</a>
+</td>-->

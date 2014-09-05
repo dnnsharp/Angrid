@@ -1,0 +1,81 @@
+<table class="table table-striped">
+    <thead>
+        <tr class="active">
+
+            <th data-ng-repeat="c in settings.columns"
+                data-ng-class="{ 'hidden-xs': !c.showOn.mobile, 'hidden-sm': !c.showOn.tablet, 'hidden-md': !c.showOn.desktop, 'hidden-lg': !c.showOn.large }">
+
+                <span data-ng-show="!c.filterable || !$_editFilters">
+                    <a href="" data-ng-if="c.sortable" title="Sort by {{c.title}}" data-ng-click="sortBy(c.name);">{{c.title}}</a>
+                    <i class="glyphicon glyphicon-chevron-down" data-ng-if="c.sortable && query.sort.field == c.name && query.sort.ascending"></i>
+                    <i class="glyphicon glyphicon-chevron-up" data-ng-if="c.sortable && query.sort.field == c.name && !query.sort.ascending"></i>
+
+                    <span data-ng-if="!c.sortable">{{c.title}}</span>
+                </span>
+
+                <div class="btn-group angrid-filter" data-ng-if="settings.filtersEnabled && c.filterable" data-ng-show="$_editFilters">
+                    <button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="{{settings.dropdownClass}}">
+                        <span class="filter-name">
+                            {{c.title}}: {{query.filters[c.name] ? query.filters[c.name] : '--'}}
+                        </span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li data-ng-repeat="v in source.filters[c.name]">
+                            <a href="" data-ng-click="filter(c, v)">{{v}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </th>
+
+            <th class="angrid-item-buttons">
+                <button type="button" class="btn btn-default" data-ng-click="toggleFilters()" title="{{settings.localization.filter.data || 'Apply Filters' }}" data-ng-show="settings.filtersEnabled && !$_editFilters && hasFilters()">
+                    <span class="glyphicon glyphicon-filter"></span>
+                </button>
+
+                <button type="button" class="btn btn-default" data-ng-click="toggleFilters(); clearFilters();" title="{{settings.localization.filter.clear || 'Clear Filters'}}" data-ng-show="$_editFilters && hasFilters()">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        <tr data-ng-repeat="row in source.data" class="angrid-row" data-ng-class="{'selected':row.$_selected}">
+
+            <td data-ng-repeat="c in settings.columns" data-ng-click="toggleSelect(row)" data-ng-if="!row.$_confirmAction && !row.$_err"
+                data-ng-class="{ 'hidden-xs': !c.showOn.mobile, 'hidden-sm': !c.showOn.tablet, 'hidden-md': !c.showOn.desktop, 'hidden-lg': !c.showOn.large }">
+                {{row[c.name]}}
+            </td>
+            <td class="angrid-item-buttons" data-ng-click="toggleSelect(row)" data-ng-if="!row.$_confirmAction && !row.$_err">
+
+                <span class="angrid-loading" data-ng-show="row.$_executing"></span>
+
+                <!--display item buttons-->
+                <a href="" class="btn btn-{{btn.cssClass}} opacity75" data-ng-repeat="btn in settings.itemButtons"
+                   data-ng-click="onItemButton(row, btn)"
+                   data-ng-hide="row.$_executing"
+                   data-nobubble=""
+                   title="{{btn.help}}">
+                    <span class="glyphicon {{btn.iconClass}}" data-ng-if="btn.iconClass"></span>
+                    {{btn.title}}
+                </a>
+
+                <!--<a href="{{row[settings.specialFields.url]}}" class="btn btn-default opacity75" data-ng-if="row[settings.specialFields.url]">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>-->
+            </td>
+
+            <td data-ng-if="row.$_confirmAction" colspan="{{settings.columns.length + 1}}" class="alert alert-warning">
+                {{row.$_confirmAction.confirmationMessage}}
+                <a href="" class="btn btn-danger btn-xs" data-ng-click="onItemButton(row, row.$_confirmAction, true); row.$_confirmAction = false; ">{{row.$_confirmAction.confirmationOk}}</a>
+                <a href="" class="btn btn-default btn-xs" data-ng-click="row.$_confirmAction = false">{{row.$_confirmAction.confirmationCancel}}</a>
+            </td>
+
+            <td data-ng-if="row.$_err" colspan="{{settings.columns.length + 1}}" class="alert alert-danger">
+                {{row.$_err}}
+            </td>
+
+        </tr>
+    </tbody>
+</table>

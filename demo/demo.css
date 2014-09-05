@@ -1,0 +1,60 @@
+body {
+  background-color: #eaeaea;
+}
+.collapsed .panel-body {
+  display: none;
+}
+label[for] {
+  cursor: pointer;
+}
+.white-space {
+  height: 100px;
+}
+a {
+  cursor: pointer;
+}
+.settingsArea {
+  padding-top: 65px;
+}
+.angridArea {
+  padding-top: 15px;
+}
+.angridArea {
+  margin-top: 15px;
+}
+#angridAreaTabs {
+  margin-bottom: 15px;
+}
+@media (min-width: 992px) {
+  .settingsArea {
+    height: 100vh;
+    overflow: auto;
+  }
+  .angridArea {
+    padding-top: 65px;
+  }
+}
+.bs-glyphicons-list {
+  list-style: none outside none;
+}
+.bs-glyphicons-list li {
+  display: block;
+  width: 103px;
+  height: 113px;
+  padding: 10px;
+  float: left;
+  text-align: center;
+  cursor: pointer;
+}
+.bs-glyphicons-list li .glyphicon {
+  font-size: 24px;
+}
+.bs-glyphicons-list li .glyphicon-class {
+  display: block;
+  word-wrap: break-word;
+  font-size: 12px;
+}
+.bs-glyphicons-list li:hover {
+  background-color: #563e7c;
+  color: white;
+}

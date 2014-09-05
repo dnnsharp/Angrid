@@ -1,112 +1,132 @@
-<div class="angrid">
+<!--template for button bar, since we have 2 (top and bottom)-->
+<script type="text/ng-template" id="/buttonbar.html">
+    <div class="angrid-buttons angrid-{{position}}-buttons">
+        <button type="button" class="btn btn-{{btn.cssClass}}" title="{{btn.help}}"
+                data-ng-repeat="btn in settings.gridButtons | filter: { verticalPosition: position }"
+                data-ng-click="onGridButton(btn)"
+                data-ng-show="!confirmAction && (!btn.requiresSelection || selected.length > 0)"
+                data-ng-disabled="$_executing"
+                data-ng-class="{ 'pull-left': btn.horizontalPosition == 'left', 'pull-right': btn.horizontalPosition == 'right' }">
+            <span class="glyphicon {{btn.iconClass}}" data-ng-if="btn.iconClass"></span>
+            {{btn.title}}
+            <span class="label label-{{btn.cssClass}}" data-ng-if="btn.showCount && btn.cssClass != 'link'">{{selected.length}}</span>
+            <span class="label label-info" data-ng-if="btn.showCount && btn.cssClass == 'link'">{{selected.length}}</span>
+        </button>
 
-    <div data-ng-if="settings.search" class="form-horizontal angrid-search">
+        <div class="alert alert-warning" data-ng-show="confirmAction">
+            {{confirmAction.confirmationMessage}}
+            <a href="" class="btn btn-danger btn-xs" data-ng-click="onGridButton(confirmAction, true); confirmAction = false; ">{{confirmAction.confirmationOk}}</a>
+            <a href="" class="btn btn-default btn-xs" data-ng-click="confirmAction = false">{{confirmAction.confirmationCancel}}</a>
+        </div>
+
+        <div class="clearfix"></div>
+    </div>
+
+</script>
+
+<div class="angrid-popup modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{{settings.localization.close.title || 'Close' }}</span></button>
+                <h4 class="modal-title" id="myModalLabel">{{ popupTitle }}</h4>
+            </div>
+            <div class="modal-body">
+                
+            </div>
+            <!--<div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>-->
+        </div>
+    </div>
+</div>
+
+<div class="angrid" data-ng-class="{'angrid-error': error }">
+
+    <div data-ng-if="settings.searchEnabled" class="form-horizontal row angrid-search">
         <!--<label class="col-md-2 control-label">Search</label>-->
         <div class="col-md-offset-2 col-md-8">
-            <input type="text" class="form-control input-lg" data-ng-model="searchTerms" data-ng-keyup="delayedSearch(searchTerms)" placeholder="Search Something..." />
+            <input type="text" class="form-control input-lg" data-ng-model="searchTerms" data-ng-keyup="delayedSearch(searchTerms)"
+                   placeholder="{{settings.localization.search.placeholder || 'Search Something...'}}" />
         </div>
         <div class="clearfix"></div>
     </div>
 
-    <table class="table table-striped">
-        <thead>
-            <tr class="active">
+    <!--draw top buttons-->
+    <div data-buttonbar="" data-position="top"></div>
 
-                <th data-ng-repeat="c in settings.columns">
+    <!--<div data-ng-include="settings.viewUrl + '?v=' + settings.v"></div>-->
+    <div data-angrid-view=""></div>
 
-                    <span data-ng-show="!c.filterable || !$_editFilters">
-                        <a href="" data-ng-if="c.sortable" title="Sort by {{c.title}}" data-ng-click="sortBy(c.name);">{{c.title}}</a>
-                        <i class="glyphicon glyphicon-chevron-down" data-ng-if="c.sortable && query.sort.field == c.name && query.sort.ascending"></i>
-                        <i class="glyphicon glyphicon-chevron-up" data-ng-if="c.sortable && query.sort.field == c.name && !query.sort.ascending"></i>
+    <p class="angrid-nodata text-muted" data-ng-if="!error && !source.data.length">{{settings.localization.noData || 'No Data'}}</p>
+    <p class="angrid-error text-muted" data-ng-if="error">{{settings.localization.error.title || 'Error:' }} {{error}}</p>
 
-                        <span data-ng-if="!c.sortable">{{c.title}}</span>
-                    </span>
+    <div class="well angrid-pager">
+        <div class="row">
+            <div class="col-xs-10">
 
-                    <div class="btn-group angrid-filter" data-ng-if="c.filterable" data-ng-show="$_editFilters">
-                        <button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="{{settings.dropdownClass}}">
-                            <span class="filter-name">
-                                {{c.title}}: {{query.filters[c.name] ? query.filters[c.name] : '--'}}
-                            </span>
-                            <span class="caret"></span>
+                <div class="angrid-loading" data-ng-style="{ 'visibility': loading ? 'visible' : 'hidden' }">
+                </div>
+
+                <!--classic pagination is 1.2.3.4.5 etc-->
+                <ul class="pagination pagination-sm" data-ng-if="settings.pagination == 'classic' && query.pageCount() > 1">
+                    <li><a href="" data-ng-click="loadPage(query.currentPage - 1)">&laquo;</a></li>
+                    <li data-ng-repeat="i in pages" data-ng-class="{'active': i == query.currentPage}"><a href="" data-ng-click="loadPage(i)">{{i}}</a></li>
+                    <li><a href="" data-ng-click="loadPage(query.currentPage + 1)">&raquo;</a></li>
+                </ul>
+
+                <!--simple navigation is prev/next, more suitable for touch-->
+                <ul class="pagination pagination-touch" data-ng-if="settings.pagination == 'touch' && query.pageCount() > 1">
+                    <li>
+                        <button type="button" class="btn btn-default" data-ng-click="loadPage(query.currentPage - 1)" data-ng-disabled="query.currentPage <= 1">
+                            <span data-ng-bind-html="localize(settings.localization.pagination.prev, '&larr;  Previous', true)"></span>
                         </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li data-ng-repeat="v in source.filters[c.name]">
-                                <a href="" data-ng-click="filter(c, v)">{{v}}</a>
-                            </li>
-                        </ul>
-                    </div>
-                </th>
+                    </li>
+                    <li class="pager-status">{{query.currentPage}} / {{query.pageCount()}}</li>
+                    <li>
+                        <button type="button" class="btn btn-default" data-ng-click="loadPage(query.currentPage + 1)" data-ng-disabled="query.currentPage >= query.pageCount()">
+                            <span data-ng-bind-html="localize(settings.localization.pagination.next, 'Next &rarr;', true)"></span>
+                        </button>
+                    </li>
+                </ul>
 
-                <th width="1">
-                    <button type="button" class="btn btn-default" data-ng-click="toggleFilters()" title="Filter data" data-ng-show="!$_editFilters && hasFilters()">
-                        <span class="glyphicon glyphicon-filter"></span>
-                    </button>
-
-                    <button type="button" class="btn btn-default" data-ng-click="toggleFilters(); clearFilters();" title="Clear Filters" data-ng-show="$_editFilters && hasFilters()">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </button>
-                </th>
-
-            </tr>
-        </thead>
-        <tbody>
-            <tr data-ng-repeat="row in source.data" class="angrid-row" data-ng-class="{'selected':row.$_selected}">
-
-                <td data-ng-repeat="c in settings.columns" data-ng-click="toggleSelect(row)">
-                    {{row[c.name]}}
-                </td>
-                <td>
-                    <a href="{{row[settings.specialFields.url]}}" class="btn btn-default opacity75" data-ng-if="row[settings.specialFields.url]">
-                        <span class="glyphicon glyphicon-chevron-right"></span>
-                    </a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <p class="angrid-nodata text-muted" data-ng-if="!source.data.length">No data</p>
-
-    <div class="row well angrid-pager">
-        
-        <div class="col-xs-10">
-
-            <div class="angrid-loading" data-ng-style="{ 'visibility': loading ? 'visible' : 'hidden' }">
+            </div>
+            <div class="col-xs-2 angrid-ddpagesize" data-ng-if="settings.pageSizes.length > 1">
+                <select class="form-control input-sm" data-ng-options="s for s in settings.pageSizes" data-ng-model="query.currentPageSize" data-ng-change="query.currentPage = 1"></select>
             </div>
 
-            <!--classic pagination is 1.2.3.4.5 etc-->
-            <ul class="pagination pagination-sm" data-ng-if="settings.pagination == 'classic' && query.pageCount() > 1">
-                <li><a href="" data-ng-click="loadPage(query.currentPage - 1)">&laquo;</a></li>
-                <li data-ng-repeat="i in pages" data-ng-class="{'active': i == query.currentPage}"><a href="" data-ng-click="loadPage(i)">{{i}}</a></li>
-                <li><a href="" data-ng-click="loadPage(query.currentPage + 1)">&raquo;</a></li>
-            </ul>
-
-            <!--simple navigation is prev/next, more suitable for touch-->
-            <ul class="pager" data-ng-if="settings.pagination == 'touch' && query.pageCount() > 1">
-                <li><button type="button" class="btn btn-default" data-ng-click="loadPage(query.currentPage - 1)" data-ng-disabled="query.currentPage <= 1">&larr;  Previous</button></li>
-                <li class="pager-status">{{query.currentPage}} / {{query.pageCount()}}</li>
-                <li><button type="button" class="btn btn-default" data-ng-click="loadPage(query.currentPage + 1)" data-ng-disabled="query.currentPage >= query.pageCount()">Next &rarr;</button></li>
-            </ul>
-
-        </div>
-        <div class="col-xs-2 angrid-ddpagesize" data-ng-if="settings.pageSizes.length > 1">
-            <select class="form-control input-sm" data-ng-options="s for s in settings.pageSizes" data-ng-model="query.currentPageSize" data-ng-change="query.currentPage = 1"></select>
         </div>
     </div>
 
-    <div class="" data-ng-if="selected.length > 0">
+    <!--draw bottom buttons-->
+    <div data-buttonbar="" data-position="bottom"></div>
+
+    <!--<a href="{{settings.addUrl}}" class="btn btn-info pull-left" style="margin: 9px;" data-ng-if="settings.addUrl">{{settings.localization.button.add.title || 'Add' }}</a>-->
+    <!--<div class="" data-ng-if="selected.length > 0 && source.canDelete()">
         <div data-ng-show="!confirmDelete">
-            <a href="" class="btn btn-danger" data-ng-click="confirmDelete = true;">
-                <i class="glyphicon glyphicon-trash"></i> Remove
+            <a href="" class="btn btn-danger" data-ng-click="confirmDelete = true;" style="margin: 9px 0;">
+                <i class="glyphicon glyphicon-trash"></i> {{settings.localization.button.remove.title || 'Remove' }} <span class="label label-danger"> {{selected.length}}</span>
             </a>
-            <span class="label label-info"> {{selected.length}}</span> items selected
-            (<a href="" data-ng-click="clearSelection()">clear</a>)
+            (<a href="" data-ng-click="clearSelection()">{{settings.localization.selection.clear || 'clear selection' }}</a>)
         </div>
 
         <div class="alert alert-warning" data-ng-show="confirmDelete">
-            Are you sure you wish to delete these {{selected.length}} items?
-            <a href="" class="btn btn-danger btn-xs" data-ng-click="deleteSelected()">Yes, pretty sure</a>
-            <a href="" class="btn btn-default btn-xs" data-ng-click="confirmDelete = false">No, I'm having second thougts</a>
+
+            <span data-ng-if='settings.localization.button.remove.prompt'>
+                {{ interpolate(settings.localization.button.remove.prompt) }}
+            </span>
+            <span data-ng-if='!settings.localization.button.remove.prompt'>
+                Are you sure you wish to delete these {{selected.length}} items?
+            </span>
+
+            <a href="" class="btn btn-danger btn-xs" data-ng-click="confirmDelete = false; deleteSelected()">{{settings.localization.button.remove.confirm || 'Yes, pretty sure'}}</a>
+            <a href="" class="btn btn-default btn-xs" data-ng-click="confirmDelete = false">{{settings.localization.button.remove.cancel || 'No, I\'m having second thoughts' }}</a>
         </div>
-    </div>
+    </div>-->
+
+    <div class="clearfix"></div>
+
+    <p class="angrid-error text-muted" data-ng-if="actionError">{{settings.localization.error.title || 'Error:' }} {{actionError}}</p>
 
 </div>

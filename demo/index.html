@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html data-ng-app="demoApp" lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" /><meta content="width=device-width,initial-scale=1" name="viewport" /><link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" /><link href="../src/grid.css" rel="stylesheet" type="text/css" /><link href="../src/views/grid/styles.css" rel="stylesheet" type="text/css" /><link href="../src/views/listing/styles.css" rel="stylesheet" type="text/css" /><!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+<script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<link href="demo.css" rel="stylesheet" type="text/css" /><link href="../lib/highlight/default.min.css" rel="stylesheet" type="text/css" /><title>
+Angrid Demo
+</title></head><body data-ng-controller="AngridCtrl">
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<div class="container-fluid">
+<div class="navbar-header">
+<button class="navbar-toggle" data-target=".navbar-collapse" data-toggle="collapse" type="button">
+<span class="sr-only">
+Toggle navigation
+</span><span class="icon-bar">
+</span><span class="icon-bar">
+</span><span class="icon-bar">
+</span></button><a class="navbar-brand" href="#">
+Angrid
+</a></div><div class="collapse navbar-collapse">
+<ul class="nav navbar-nav">
+<li class="active">
+<a href="#">
+Documentation
+</a></li><li>
+<a href="download.html">
+Download
+</a></li><li>
+<a href="license.html">
+Download
+</a></li></ul></div></div></div><div class="container-fluid" data-ng-controller="DemoCtrl">
+<div class="row">
+<div class="col-md-6 settingsArea">
+<h1>
+Sample Grid
+</h1><h3>
+The grid comes with various configurable settings. The sample grid below the settings updates in real time. 
+</h3><div class="form-horizontal" role="form">
+<div class="form-group">
+<h2 class="col-xs-12">
+General Settings
+</h2></div><div class="panel panel-default collapsed">
+<div class="panel-heading">
+<a href="#">
+Configure general settings.
+</a></div><div class="panel-body">
+<div class="form-group">
+<label class="col-xs-3 control-label">
+Pagination
+</label><div class="col-xs-9">
+<select class="form-control" data-ng-model="settings.pagination">
+<option value="touch">
+Touch Friendly
+</option><option value="classic">
+Classic
+</option></select></div></div><div class="form-group">
+<label class="col-xs-3 control-label">
+Initial Page
+</label><div class="col-xs-9">
+<input class="form-control" data-ng-model="settings.initalQuery.currentPage" type="text" /></div></div><div class="form-group">
+<label class="col-xs-3 control-label">
+Page Sizes
+</label><div class="col-xs-9">
+<input class="form-control" data-ng-list=", " data-ng-model="settings.pageSizes" data-ng-trim="true" type="text" /></div></div><div class="form-group">
+<label class="col-xs-3 control-label">
+Initial Page Size
+</label><div class="col-xs-9">
+<input class="form-control" data-ng-model="settings.initalQuery.currentPageSize" type="text" /></div></div><div class="form-group">
+<label class="col-xs-3 control-label" for="search-enabled">
+Enable Search
+</label><div class="col-xs-9">
+<input data-ng-model="settings.searchEnabled" id="search-enabled" type="checkbox" /></div></div><div class="form-group">
+<label class="col-xs-3 control-label" for="filters-enabled">
+Enable Filters
+</label><div class="col-xs-9">
+<input data-ng-model="settings.filtersEnabled" id="filters-enabled" type="checkbox" /></div></div></div></div><div class="form-group">
+<h2 class="col-xs-12">
+Fields
+</h2></div><div class="panel panel-default collapsed" data-ng-repeat="column in settings.columns">
+<div class="panel-heading">
+<a href="#">
+{{column.title}} ({{column.name}})
+</a></div><div class="panel-body">
+<div class="form-group">
+<label class="col-xs-3 control-label">
+Title
+</label><div class="col-xs-9">
+<input class="form-control" data-ng-model="column.title" type="text" /></div></div><div class="form-group">
+<label class="col-xs-3 control-label">
+Visible On
+</label><div class="col-xs-9">
+<label class="checkbox-inline">
+<input data-ng-model="column.showOn.mobile" type="checkbox" />Mobile
+</label><label class="checkbox-inline">
+<input data-ng-model="column.showOn.tablet" type="checkbox" />Tablet
+</label><label class="checkbox-inline">
+<input data-ng-model="column.showOn.desktop" type="checkbox" />Desktop
+</label><label class="checkbox-inline">
+<input data-ng-model="column.showOn.large" type="checkbox" />Large Screens
+</label></div></div><div class="form-group">
+<label class="col-xs-3 control-label">
+Capabilities
+</label><div class="col-xs-9">
+<label class="checkbox-inline">
+<input data-ng-model="column.sortable" type="checkbox" />Sortable
+</label><label class="checkbox-inline">
+<input data-ng-model="column.filterable" type="checkbox" />Filterable
+</label><label class="checkbox-inline">
+<input data-ng-model="column.allowHtml" type="checkbox" />Allow HTML
+</label></div></div></div></div><div class="form-group">
+<h2 class="col-xs-12">
+Template
+</h2></div><div class="panel panel-default collapsed">
+<div class="panel-heading">
+<a href="#">
+Select layout mode and tweak display settings.
+</a></div><div class="panel-body">
+<div class="form-group">
+<label class="col-xs-3 control-label">
+Template
+</label><div class="col-xs-9">
+<select class="form-control" data-ng-change="changeTemplate()" data-ng-model="template">
+<option value="grid">
+Grid
+</option><option value="listing">
+Listing
+</option></select></div></div><div class="listing-view-settings" data-ng-if="template=='listing'">
+<div class="form-group">
+<label class="col-xs-3 control-label">
+Columns (mobile)
+</label><div class="col-xs-9">
+<select class="form-control" data-ng-model="settings.viewSettings.entriesPerRowMobile">
+<option value="1">
+1
+</option><option value="2">
+2
+</option><option value="3">
+3
+</option><option value="4">
+4
+</option><option value="6">
+6
+</option><option value="12">
+12
+</option></select></div></div><div class="form-group">
+<label class="col-xs-3 control-label">
+Columns (tablet)
+</label><div class="col-xs-9">
+<select class="form-control" data-ng-model="settings.viewSettings.entriesPerRowTablet">
+<option value="1">
+1
+</option><option value="2">
+2
+</option><option value="3">
+3
+</option><option value="4">
+4
+</option><option value="6">
+6
+</option><option value="12">
+12
+</option></select></div></div><div class="form-group">
+<label class="col-xs-3 control-label">
+Columns (desktop)
+</label><div class="col-xs-9">
+<select class="form-control" data-ng-model="settings.viewSettings.entriesPerRowDesktop">
+<option value="1">
+1
+</option><option value="2">
+2
+</option><option value="3">
+3
+</option><option value="4">
+4
+</option><option value="6">
+6
+</option><option value="12">
+12
+</option></select></div></div><div class="form-group">
+<label class="col-xs-3 control-label">
+Columns (large screens)
+</label><div class="col-xs-9">
+<select class="form-control" data-ng-model="settings.viewSettings.entriesPerRowLarge">
+<option value="1">
+1
+</option><option value="2">
+2
+</option><option value="3">
+3
+</option><option value="4">
+4
+</option><option value="6">
+6
+</option><option value="12">
+12
+</option></select></div></div></div></div></div><div class="form-group">
+<h2 class="col-xs-12">
+Item Buttons
+</h2></div><div class="panel panel-default collapsed" data-ng-repeat="btn in settings.itemButtons">
+<div class="panel-heading">
+<a href="#">
+{{btn.title || 'Button'}}
+<span data-ng-if="btn.help">
+({{btn.help}})
+</span></a></div><div class="panel-body">
+<div class="form-group">
+<label class="col-xs-3 control-label">
+Title
+</label><div class="col-xs-9">
+<input class="form-control" data-ng-model="btn.title" type="text" /></div></div><div class="form-group">
+<label class="col-xs-3 control-label">
+Help
+</label><div class="col-xs-9">
+<input class="form-control" data-ng-model="btn.help" type="text" /></div></div><div class="form-group">
+<label class="col-xs-3 control-label">
+Style
+</label><div class="col-xs-9">
+<select class="form-control" data-ng-model="btn.cssClass">
+<option value="default">
+default
+</option><option value="primary">
+primary
+</option><option value="success">
+success
+</option><option value="info">
+info
+</option><option value="warning">
+warning
+</option><option value="danger">
+danger
+</option><option value="link">
+link
+</option></select></div></div><div class="form-group">
+<label class="col-xs-3 control-label">
+Icon
+</label><div class="col-xs-9">
+<span class="glyphicon {{btn.iconClass}}" data-ng-if="btn.iconClass">
+</span><span>
+<a data-ng-click="toggleIcons()">
+Change
+</a></span><span>
+|
+</span><span>
+<a data-ng-click="clearIcon(btn)">
+Clear
+</a></span></div></div><div class="form-group" data-ng-show="iconsVisible">
+<ul class="bs-glyphicons-list col-xs-push-3 col-xs-9">
+<li data-ng-click="selectIcon(btn, glyphicon)" data-ng-repeat="glyphicon in glyphicons">
+<span class="glyphicon {{glyphicon}}">
+</span><span class="glyphicon-class">
+glyphicon {{glyphicon}}
+</span></li></ul></div><div class="form-group">
+<label class="col-xs-3 control-label" for="ask-for-confirmation-item{{$index}}">
+Ask For Confirmation
+</label><div class="col-xs-9">
+<input data-ng-model="btn.askForConfirmation" id="ask-for-confirmation-item{{$index}}" type="checkbox" /></div></div><div data-ng-if="btn.askForConfirmation">
+<div class="form-group">
+<label class="col-xs-push-3 col-xs-3 control-label">
+Confirmation Message
+</label><div class="col-xs-push-3 col-xs-6">
+<input class="form-control" data-ng-model="btn.confirmationMessage" type="text" /></div></div><div class="form-group">
+<label class="col-xs-push-3 col-xs-3 control-label">
+Title for OK Button
+</label><div class="col-xs-push-3 col-xs-6">
+<input class="form-control" data-ng-model="btn.confirmationOk" type="text" /></div></div><div class="form-group">
+<label class="col-xs-push-3 col-xs-3 control-label">
+Title for Cancel Button
+</label><div class="col-xs-push-3 col-xs-6">
+<input class="form-control" data-ng-model="btn.confirmationCancel" type="text" /></div></div></div><div class="form-group">
+<label class="col-xs-3 control-label">
+URL
+</label><div class="col-xs-9">
+<input class="form-control" data-ng-model="btn.url" type="text" /></div></div></div></div><div class="form-group">
+<h2 class="col-xs-12">
+Grid Buttons
+</h2></div><div class="panel panel-default collapsed" data-ng-repeat="btn in settings.gridButtons">
+<div class="panel-heading">
+<a href="#">
+{{btn.title || 'Button'}}
+<span data-ng-if="btn.help">
+({{btn.help}})
+</span></a></div><div class="panel-body">
+<div class="form-group">
+<label class="col-xs-3 control-label">
+Title
+</label><div class="col-xs-9">
+<input class="form-control" data-ng-model="btn.title" type="text" /></div></div><div class="form-group">
+<label class="col-xs-3 control-label">
+Help
+</label><div class="col-xs-9">
+<input class="form-control" data-ng-model="btn.help" type="text" /></div></div><div class="form-group">
+<label class="col-xs-3 control-label">
+Vertical Position
+</label><div class="col-xs-9">
+<select class="form-control" data-ng-model="btn.verticalPosition">
+<option value="top">
+Top
+</option><option value="bottom">
+Bottom
+</option></select></div></div><div class="form-group">
+<label class="col-xs-3 control-label">
+Horizontal Position
+</label><div class="col-xs-9">
+<select class="form-control" data-ng-model="btn.horizontalPosition">
+<option value="left">
+Left
+</option><option value="center">
+Center
+</option><option value="right">
+Right
+</option></select></div></div><div class="form-group">
+<label class="col-xs-3 control-label">
+Style
+</label><div class="col-xs-9">
+<select class="form-control" data-ng-model="btn.cssClass">
+<option value="default">
+default
+</option><option value="primary">
+primary
+</option><option value="success">
+success
+</option><option value="info">
+info
+</option><option value="warning">
+warning
+</option><option value="danger">
+danger
+</option><option value="link">
+link
+</option></select></div></div><div class="form-group">
+<label class="col-xs-3 control-label">
+Icon
+</label><div class="col-xs-9">
+<span class="glyphicon {{btn.iconClass}}" data-ng-if="btn.iconClass">
+</span><span>
+<a data-ng-click="toggleIcons()">
+Change
+</a></span><span>
+|
+</span><span>
+<a data-ng-click="clearIcon(btn)">
+Clear
+</a></span></div></div><div class="form-group" data-ng-show="iconsVisible">
+<ul class="bs-glyphicons-list col-xs-push-3 col-xs-9">
+<li data-ng-click="selectIcon(btn, glyphicon)" data-ng-repeat="glyphicon in glyphicons">
+<span class="glyphicon {{glyphicon}}">
+</span><span class="glyphicon-class">
+glyphicon {{glyphicon}}
+</span></li></ul></div><div class="form-group">
+<label class="col-xs-3 control-label" for="requires-selection{{$index}}">
+Requires Selection
+</label><div class="col-xs-9">
+<input data-ng-model="btn.requiresSelection" id="requires-selection{{$index}}" type="checkbox" /></div></div><div class="form-group">
+<label class="col-xs-3 control-label" for="show-count{{$index}}">
+Show Count
+</label><div class="col-xs-9">
+<input data-ng-model="btn.showCount" id="show-count{{$index}}" type="checkbox" /></div></div><div class="form-group">
+<label class="col-xs-3 control-label" for="ask-for-confirmation-grid{{$index}}">
+Ask For Confirmation
+</label><div class="col-xs-9">
+<input data-ng-model="btn.askForConfirmation" id="ask-for-confirmation-grid{{$index}}" type="checkbox" /></div></div><div data-ng-if="btn.askForConfirmation">
+<div class="form-group">
+<label class="col-xs-push-3 col-xs-3 control-label">
+Confirmation Message
+</label><div class="col-xs-push-3 col-xs-6">
+<input class="form-control" data-ng-model="btn.confirmationMessage" type="text" /></div></div><div class="form-group">
+<label class="col-xs-push-3 col-xs-3 control-label">
+Title for OK Button
+</label><div class="col-xs-push-3 col-xs-6">
+<input class="form-control" data-ng-model="btn.confirmationOk" type="text" /></div></div><div class="form-group">
+<label class="col-xs-push-3 col-xs-3 control-label">
+Title for Cancel Button
+</label><div class="col-xs-push-3 col-xs-6">
+<input class="form-control" data-ng-model="btn.confirmationCancel" type="text" /></div></div></div><div class="form-group">
+<label class="col-xs-3 control-label">
+URL
+</label><div class="col-xs-9">
+<input class="form-control" data-ng-model="btn.url" type="text" /></div></div></div></div></div></div><div class="col-md-6 angridArea">
+<ul class="nav nav-tabs" id="angridAreaTabs" role="tablist">
+<li class="active">
+<a href="#angridArea">
+View
+</a></li><li>
+<a href="#angridApp">
+angrid_app.js
+</a></li><li>
+<a href="#form">
+form.html
+</a></li></ul><div class="tab-content" id="angridAreaTabsContent">
+<div class="tab-pane fade active in" data-angrid="" data-settings="settings" data-source="webServiceDataSource" data-template-url="../src/grid.html" data-version="" id="angridArea">
+</div><div class="tab-pane fade" id="form">
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html data-ng-app=&quot;demoApp&quot; lang=&quot;en&quot; xml:lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+&lt;head&gt;
+    &lt;meta content=&quot;text/html; charset=utf-8&quot; http-equiv=&quot;Content-Type&quot; /&gt;
+    &lt;meta content=&quot;width=device-width,initial-scale=1&quot; name=&quot;viewport&quot; /&gt;
+    &lt;link href=&quot;../lib/bootstrap/css/bootstrap.min.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; /&gt;
+    &lt;!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries --&gt;
+    &lt;!-- WARNING: Respond.js doesn't work if you view the page via file:// --&gt;
+    &lt;!--[if lt IE 9]&gt;
+    &lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js&quot;&gt;&lt;/script&gt;
+    &lt;![endif]--&gt;
+    &lt;link href=&quot;demo.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; /&gt;
+    &lt;title&gt;
+        Angrid Demo Form
+    &lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class=&quot;container-fluid&quot; data-ng-controller=&quot;FormCtrl&quot;&gt;
+        &lt;div class=&quot;row&quot;&gt;
+            &lt;div class=&quot;col-xs-12&quot;&gt;
+                &lt;div class=&quot;form-horizontal&quot; data-ng-hide=&quot;dataUpdated&quot; role=&quot;form&quot;&gt;
+                    &lt;div class=&quot;form-group&quot;&gt;
+                        &lt;label class=&quot;col-xs-2 control-label&quot;&gt;
+                            First Name
+                        &lt;/label&gt;
+                        &lt;div class=&quot;col-xs-10&quot;&gt;
+                            &lt;input class=&quot;form-control&quot; data-ng-model=&quot;data.firstName&quot; type=&quot;text&quot; /&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;form-group&quot;&gt;
+                        &lt;label class=&quot;col-xs-2 control-label&quot;&gt;
+                            Last Name
+                        &lt;/label&gt;
+                        &lt;div class=&quot;col-xs-10&quot;&gt;
+                            &lt;input class=&quot;form-control&quot; data-ng-model=&quot;data.lastName&quot; type=&quot;text&quot; /&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;form-group&quot;&gt;
+                        &lt;label class=&quot;col-xs-2 control-label&quot;&gt;
+                            Email
+                        &lt;/label&gt;
+                        &lt;div class=&quot;col-xs-10&quot;&gt;
+                            &lt;input class=&quot;form-control&quot; data-ng-model=&quot;data.email&quot; type=&quot;text&quot; /&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;form-group&quot;&gt;
+                        &lt;div class=&quot;col-xs-offset-2 col-xs-2&quot;&gt;
+                            &lt;button class=&quot;btn btn-primary&quot; data-ng-click=&quot;updateData()&quot;&gt;
+                                Save
+                            &lt;/button&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div data-ng-show=&quot;dataUpdated&quot; id=&quot;message&quot;&gt;
+                    {{message}}
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;script src=&quot;../lib/jquery.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;../lib/angular/angular.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;../lib/bootstrap/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;../src/grid.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;angrid_app.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;demo.js&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></div><div class="tab-pane fade" id="angridApp">
+<pre class="prettyprint">
+angular.module('angridApp', ['angrid']).
+
+value('webAPIURL', 'api.php').
+
+value('webRoot', '../').
+
+controller('AngridCtrl', ['$scope', '$http', 'webAPIURL', 'webRoot', function($scope, $http, webAPIURL, webRoot){
+    $scope.defaultSettings={
+        &quot;filtersEnabled&quot;: true,
+        &quot;useArraySyntax&quot;: true,
+        &quot;columns&quot;: [
+            {
+                &quot;name&quot;: &quot;id&quot;,
+                &quot;title&quot;: &quot;#&quot;
+            },
+            {
+                &quot;name&quot;: &quot;firstName&quot;,
+                &quot;title&quot;: &quot;First Name&quot;,
+                &quot;filterable&quot;: true,
+            },
+            {
+                &quot;name&quot;: &quot;lastName&quot;,
+                &quot;title&quot;: &quot;Last Name&quot;,
+                &quot;filterable&quot;: true,
+            }
+        ],
+        &quot;itemButtons&quot;: [
+            {
+                &quot;title&quot;: &quot;&quot;,
+                &quot;help&quot;: &quot;Edit this item&quot;,
+                &quot;iconClass&quot;: &quot;glyphicon-pencil&quot;,
+                &quot;url&quot;: webAPIURL + &quot;?method=edit&quot;
+            },
+            {
+                &quot;title&quot;: &quot;&quot;,
+                &quot;help&quot;: &quot;Delete this item&quot;,
+                &quot;cssClass&quot;: &quot;danger&quot;,
+                &quot;iconClass&quot;: &quot;glyphicon-trash&quot;,
+                &quot;askForConfirmation&quot;: true,
+                &quot;confirmationMessage&quot;: &quot;Are you sure you want to do delete this entry?&quot;,
+                &quot;confirmationOk&quot;: &quot;Yes, pretty sure&quot;,
+                &quot;confirmationCancel&quot;: &quot;No, I'm having second thoughts&quot;,
+                &quot;url&quot;: webAPIURL + &quot;?method=destroy&quot;
+            }
+        ],
+        &quot;gridButtons&quot;: [
+            {
+                &quot;title&quot;: &quot;Reset data source&quot;,
+                &quot;cssClass&quot;: &quot;primary&quot;,
+                &quot;url&quot;: webRoot + &quot;demo/reset_session.php&quot;
+            },
+            {
+                &quot;title&quot;: &quot;Delete&quot;,
+                &quot;help&quot;: &quot;Delete these items&quot;,
+                &quot;cssClass&quot;: &quot;danger&quot;,
+                &quot;iconClass&quot;: &quot;glyphicon-trash&quot;,
+                &quot;requiresSelection&quot;: true,
+                &quot;showCount&quot;: true,
+                &quot;askForConfirmation&quot;: true,
+                &quot;confirmationMessage&quot;: &quot;Are you sure you want to do delete these entries?&quot;,
+                &quot;confirmationOk&quot;: &quot;Yes, pretty sure&quot;,
+                &quot;confirmationCancel&quot;: &quot;No, I'm having second thoughts&quot;,
+                &quot;url&quot;: webAPIURL + &quot;?method=destroymany&quot;
+            }
+        ]
+    };
+
+    $scope.webServiceDataSource=new WebServiceDataSource({
+        dataUrl: webAPIURL,
+        filterPrefix: 'filter-',
+        filterValuesUrl: function(query) {
+            return webAPIURL + '?method=getfilters&amp;' + $.param(query) // later...
+        }
+    });
+}]).
+
+controller('FormCtrl', ['$scope', '$location', '$http', 'webAPIURL', function($scope, $location, $http, webAPIURL){
+    $scope.dataUpdated=false;
+    var id=parseInt($location.search().id);
+    $http.get(webAPIURL, {params:{method:'show', id:id}}).success(function(data){
+        $scope.data=data;
+    });
+    $scope.updateData=function(){
+        $http({
+            method:'POST',
+            url:webAPIURL + '?method=update',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            data:$.param({id:id, firstName:$scope.data.firstName, lastName:$scope.data.lastName, email:$scope.data.email})
+        }).success(function(data){
+            $scope.message=data.message;
+            $scope.dataUpdated=true;
+        });
+    };
+}]);
+</pre></div></div></div></div></div><script src="../lib/jquery.min.js">
+</script><script src="../lib/jquery-ui.min.js">
+</script><script src="../lib/angular/angular.js">
+</script><script src="../lib/angular/angular-animate.js">
+</script><script src="../lib/bootstrap/js/bootstrap.min.js">
+</script><script src="../src/grid.js">
+</script><script src="../src/views/grid/script.js">
+</script><script src="../src/views/listing/script.js">
+</script><script src="../lib/highlight/highlight.min.js">
+</script><script src="angrid_app.js">
+</script><script src="demo.js">
+</script></body></html>
